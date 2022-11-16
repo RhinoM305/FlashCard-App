@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { readCard, readDeck } from "../utils/api/index";
-import CardView from "./CardView";
+import { readDeck } from "../utils/api/index";
+import CardView from "../Card/CardView";
+import BreadCrumb from "../Layout/BreadCrumb";
+import { PlusCircleIcon, IterationsIcon } from "@primer/octicons-react";
 
 function StudyView() {
   const [deck, setDeck] = useState([]);
@@ -21,7 +23,11 @@ function StudyView() {
       .catch(setError);
 
     return () => abortController.abort();
-  }, []);
+  }, [deckId]);
+
+  if (error) {
+    console.log(error);
+  }
 
   const flipHandler = () => {
     if (display.side.includes("front")) {
@@ -38,7 +44,7 @@ function StudyView() {
   const restartHandler = () => {
     setDisplay({ ...display, pos: 0 });
   };
-  const cardsAreLoaded = () => {
+  const deckIsLoaded = () => {
     return (
       <>
         <CardView
@@ -55,33 +61,42 @@ function StudyView() {
           </button>
         ) : (
           <button className="btn btn-primary" onClick={() => restartHandler()}>
+            <IterationsIcon size={16} />
             Restart
           </button>
         )}
       </>
     );
   };
-  return (
-    <div>
-      <nav aria-label="breadcrumb">
-        <ol className="breadcrumb">
-          <li className="breadcrumb-item active">
-            <Link to="/">Home</Link>
-          </li>
-          <li className="breadcrumb-item active">{deck.name}</li>
-          <li className="breadcrumb-item active" aria-current="page">
-            Study
-          </li>
-        </ol>
-      </nav>
-      <h1>Study: {deck.name}</h1>
-      <div className="card">
-        <div className="card-body">
-          {deck.cards ? cardsAreLoaded() : "loading..."}
+  if (cardTotal > 3) {
+    return (
+      <div>
+        <BreadCrumb deckName={deck.name} deckId={deckId} currentTab="Study" />
+        <h1>Study: {deck.name}</h1>
+        <div className="card">
+          <div className="card-body">
+            {deck.cards ? deckIsLoaded() : "loading..."}
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  } else {
+    return (
+      <div>
+        <BreadCrumb deckName={deck.name} deckId={deckId} currentTab="Study" />
+        <h1>Study: {deck.name}</h1>
+        <h3>Not enough cards.</h3>
+        <p>
+          You need at least 3 cards to study. There are {cardTotal} cards in
+          this deck.{" "}
+        </p>
+        <Link to={`/decks/${deckId}/cards/new`} className="btn btn-primary">
+          <PlusCircleIcon size={16} />
+          Add Cards
+        </Link>
+      </div>
+    );
+  }
 }
 
 export default StudyView;
