@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link, useHistory } from "react-router-dom";
 import { readDeck, deleteDeck, deleteCard } from "../utils/api/index";
 import { PlusCircleIcon, TrashIcon, PencilIcon } from "@primer/octicons-react";
-import BreadCrumb from "../Layout/BreadCrumb";
+import BreadCrumb from "../Common/BreadCrumb";
 
 function DeckView() {
   const [deck, setDeck] = useState([]);
-  const [error, setError] = useState(undefined);
+  const [error, setError] = useState("");
 
   const { deckId } = useParams();
   const history = useHistory();
@@ -40,7 +40,7 @@ function DeckView() {
 
   const deckIsLoaded = () => {
     const list = deck.cards.map((card) => (
-      <div className="card border-secondary">
+      <div className="card border-secondary" key={card.id}>
         <div className="card-body">
           <div className="d-flex flex-row">
             <p>{card.front}</p>

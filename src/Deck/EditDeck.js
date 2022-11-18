@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useHistory, Link } from "react-router-dom";
 import { readDeck, updateDeck } from "../utils/api/index";
-import BreadCrumb from "../Layout/BreadCrumb";
+import BreadCrumb from "../Common/BreadCrumb";
 
 function EditDeck() {
   const [deck, setDeck] = useState([]);
-  const [error, setError] = useState(undefined);
+  const [error, setError] = useState("");
 
   const { deckId } = useParams();
   const history = useHistory();
@@ -42,7 +42,7 @@ function EditDeck() {
           <input
             className="form-control"
             id="deckNameInput"
-            value={deck.name}
+            value={deck.name || ""}
             onChange={(update) =>
               setDeck({ ...deck, name: update.target.value })
             }
@@ -53,7 +53,7 @@ function EditDeck() {
           <textarea
             className="form-control"
             id="descriptionInput"
-            value={deck.description}
+            value={deck.description || ""}
             onChange={(update) =>
               setDeck({ ...deck, description: update.target.value })
             }

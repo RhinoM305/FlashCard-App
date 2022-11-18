@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { readDeck } from "../utils/api/index";
 import CardView from "../Card/CardView";
-import BreadCrumb from "../Layout/BreadCrumb";
+import BreadCrumb from "../Common/BreadCrumb";
 import { PlusCircleIcon, IterationsIcon } from "@primer/octicons-react";
 
 function StudyView() {
   const [deck, setDeck] = useState([]);
   const [cardTotal, setCardTotal] = useState(0);
-  const [error, setError] = useState(undefined);
+  const [error, setError] = useState("");
   const [display, setDisplay] = useState({ pos: 0, side: "front" });
 
   const { deckId } = useParams();
@@ -44,6 +44,17 @@ function StudyView() {
   const restartHandler = () => {
     setDisplay({ ...display, pos: 0 });
   };
+
+  const isFlipped = () => {
+    if (display.side == "back") {
+      return (
+        <button className="btn btn-primary" onClick={() => nextHandler()}>
+          Next
+        </button>
+      );
+    }
+  };
+
   const deckIsLoaded = () => {
     return (
       <>
@@ -56,19 +67,16 @@ function StudyView() {
           Flip
         </button>
         {display.pos < cardTotal - 1 ? (
-          <button className="btn btn-primary" onClick={() => nextHandler()}>
-            Next
-          </button>
+          isFlipped()
         ) : (
           <button className="btn btn-primary" onClick={() => restartHandler()}>
-            <IterationsIcon size={16} />
             Restart
           </button>
         )}
       </>
     );
   };
-  if (cardTotal > 3) {
+  if (cardTotal > 2) {
     return (
       <div>
         <BreadCrumb deckName={deck.name} deckId={deckId} currentTab="Study" />

@@ -1,12 +1,13 @@
 import Header from "./Header";
 import NotFound from "./NotFound";
-import DeckList from "../Home/Decklist";
+import DeckList from "../Deck/Decklist";
 import StudyView from "../Deck/Studyview";
 import DeckView from "../Deck/DeckView";
 import CreateDeckView from "../Deck/CreateDeck";
 import EditDeck from "../Deck/EditDeck";
 import AddCard from "../Card/AddCard";
 import EditCard from "../Card/EditCard";
+import CardForm from "../Common/CardForm";
 import { PlusCircleIcon } from "@primer/octicons-react";
 import { Switch, Route, Link } from "react-router-dom";
 
@@ -43,7 +44,6 @@ function Layout() {
           <Route exact path={`/decks/:deckId/cards/:cardId/edit`}>
             <EditCard />
           </Route>
-
           {/* Display Deck */}
           <Route>
             <NotFound />

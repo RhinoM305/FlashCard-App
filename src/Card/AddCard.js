@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, useHistory, Link } from "react-router-dom";
 import { readDeck, createCard } from "../utils/api/index";
+import BreadCrumb from "../Common/BreadCrumb";
+import CardForm from "../Common/CardForm";
 
 function AddCard() {
   const [deck, setDeck] = useState([]);
@@ -8,6 +10,7 @@ function AddCard() {
   const [error, setError] = useState(undefined);
 
   const { deckId } = useParams();
+  const history = useHistory();
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -16,12 +19,16 @@ function AddCard() {
   }, []);
 
   async function loadDeck() {
-    readDeck(deckId).then(setDeck).catch(setError);
+    readDeck(deckId).then(setDeck);
   }
 
   const submitHandler = (event) => {
     const abortController = new AbortController();
     createCard(deckId, card, abortController.signal);
+  };
+
+  const changeHandler = ({ target }) => {
+    setCard({ ...card, [target.id]: target.value });
   };
 
   if (error) {
@@ -30,47 +37,18 @@ function AddCard() {
 
   return (
     <div>
-      <nav aria-label="breadcrumb">
-        <ol className="breadcrumb">
-          <li className="breadcrumb-item active">
-            <Link to="/">Home</Link>
-          </li>
-          <li className="breadcrumb-item active" aria-current="page">
-            Add Card
-          </li>
-        </ol>
-      </nav>
-      <h1>{deck.name}:Add Card</h1>
-      <form onSubmit={submitHandler}>
-        <div className="form-group">
-          <label htmlFor="deckNameInput">Name</label>
-          <textarea
-            className="form-control"
-            id="cardFrontInput"
-            placeholder="Front Side Of Card"
-            onChange={(update) =>
-              setCard({ ...card, front: update.target.value })
-            }
-          ></textarea>
-        </div>
-        <div className="form-group">
-          <label htmlFor="descriptionInput">Back</label>
-          <textarea
-            className="form-control"
-            id="cardBackInput"
-            placeholder="Back Side Of Card"
-            onChange={(update) =>
-              setCard({ ...card, back: update.target.value })
-            }
-          ></textarea>
-        </div>
-        <Link className="btn btn-secondary" to={`/decks/${deckId}`}>
-          Done
-        </Link>
-        <button className="btn btn-primary" type="submit">
-          Save
-        </button>
-      </form>
+      <BreadCrumb
+        deckName={deck.name}
+        deckId={deckId}
+        currentTab={"Add Card"}
+      />
+      <h1>{deck.name} :Add Card</h1>
+      <CardForm
+        deckId={deckId}
+        card={card}
+        changeHandler={changeHandler}
+        submitHandler={submitHandler}
+      />
     </div>
   );
 }

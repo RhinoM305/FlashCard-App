@@ -1,11 +1,11 @@
 import { Link, useHistory } from "react-router-dom";
 import { createDeck } from "../utils/api/index";
 import React, { useState } from "react";
-import BreadCrumb from "../Layout/BreadCrumb";
+import BreadCrumb from "../Common/BreadCrumb";
 
 function CreateDeckView() {
   const [deckForm, setDeckForm] = useState({ name: "", description: "" });
-  const [error, setError] = useState(undefined);
+  const [error, setError] = useState("");
 
   let history = useHistory();
 

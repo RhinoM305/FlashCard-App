@@ -5,7 +5,7 @@ import { TrashIcon, EyeIcon, RepoIcon } from "@primer/octicons-react";
 
 function DeckList() {
   const [decks, setDecks] = useState([]);
-  const [error, setError] = useState(undefined);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const abortController = new AbortController();
